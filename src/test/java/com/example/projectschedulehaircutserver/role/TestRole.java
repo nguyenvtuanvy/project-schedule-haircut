@@ -14,8 +14,8 @@ public class TestRole {
     @Test
     void create(){
         RoleDTO roleDTO = new RoleDTO();
-//        roleDTO.setName("EMPLOYEE");
-        roleDTO.setName("USER");
+        roleDTO.setName("EMPLOYEE");
+//        roleDTO.setName("USER");
 //        roleDTO.setName("ADMIN");
         roleService.createRole(roleDTO);
     }

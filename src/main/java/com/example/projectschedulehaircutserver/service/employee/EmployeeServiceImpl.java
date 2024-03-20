@@ -43,6 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService{
             employee.setAge(employeeDTO.getAge());
             employee.setAddress(employeeDTO.getAddress());
             employee.setPhone(employeeDTO.getPhone());
+            employee.setRole(role);
             employee.setIsDeleted(false);
             employee.setAvatar(employeeDTO.getAvatar());
             employee.setAccount(savedAccount);

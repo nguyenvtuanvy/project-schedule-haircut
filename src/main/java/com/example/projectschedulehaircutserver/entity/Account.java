@@ -62,8 +62,8 @@ public class Account implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false, unique = true)
     private Role role;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
