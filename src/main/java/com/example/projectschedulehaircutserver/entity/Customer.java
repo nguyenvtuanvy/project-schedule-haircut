@@ -18,8 +18,7 @@ public class Customer extends Account{
     @Column(name = "isBlocked")
     private Boolean isBlocked;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "accountId", nullable = false)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

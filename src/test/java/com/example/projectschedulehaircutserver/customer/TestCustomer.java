@@ -13,7 +13,9 @@ public class TestCustomer {
 
     @Test
     void create(){
-        CustomerDTO customerDTO = new CustomerDTO("hieu3110", "12345", "nguyễn văn hiếu", 30, "Vĩnh Điện, Quảng Nam", "0327443353");
-        customerService.createCustomer(customerDTO, 2);
+        CustomerDTO customerDTO = new CustomerDTO("hieu31", "12345", "nguyễn văn hiếu", 30, "Vĩnh Điện, Quảng Ngãi", "0327455555");
+//        CustomerDTO customerDTO = new CustomerDTO("minh2602", "12345", "nguyễn văn minh", 30, "Vĩnh Điện, Quảng Nam", "0927455999");
+//        CustomerDTO customerDTO = new CustomerDTO("vanan", "12345", "nguyễn văn an", 20, "Tiên Phước, Quảng Nam", "0875789999");
+        customerService.createCustomer(customerDTO);
     }
 }

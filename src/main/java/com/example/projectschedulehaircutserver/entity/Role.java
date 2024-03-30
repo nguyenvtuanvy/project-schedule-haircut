@@ -21,8 +21,8 @@ public class Role {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne(mappedBy = "role")
-    private Account account;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    private Set<Account> accounts = new HashSet<>();
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<Manager> managers = new HashSet<>();

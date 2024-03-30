@@ -19,9 +19,9 @@ public class EmployeeServiceImpl implements EmployeeService{
     private RoleRepo roleRepo;
     private PasswordEncoder encoder;
     @Override
-    public void createEmployee(EmployeeDTO employeeDTO, Integer roleId) {
+    public void createEmployee(EmployeeDTO employeeDTO) {
         try {
-            Role role = roleRepo.findById(roleId).orElseThrow(() -> new RuntimeException("No roles specified."));
+            Role role = roleRepo.findById(1).orElseThrow(() -> new RuntimeException("No roles specified."));
 
             Account account = Account.builder()
                     .fullName(employeeDTO.getFullName())

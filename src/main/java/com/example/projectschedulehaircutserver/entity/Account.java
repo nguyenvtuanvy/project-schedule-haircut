@@ -1,5 +1,6 @@
 package com.example.projectschedulehaircutserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -62,15 +63,16 @@ public class Account implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false, unique = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JsonIgnore
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
-    private Set<Customer> customers = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
+    private Customer customer;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "account")
-    private Set<Employee> employees = new HashSet<>();
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
+    private Employee employee;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

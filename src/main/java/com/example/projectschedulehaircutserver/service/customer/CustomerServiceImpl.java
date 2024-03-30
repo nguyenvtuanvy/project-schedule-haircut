@@ -19,9 +19,9 @@ public class CustomerServiceImpl implements CustomerService{
     private RoleRepo roleRepo;
     private PasswordEncoder encoder;
     @Override
-    public void createCustomer(CustomerDTO customerDTO, Integer roleId) {
+    public void createCustomer(CustomerDTO customerDTO) {
         try {
-            Role role = roleRepo.findById(roleId).orElseThrow(() -> new RuntimeException("No roles specified."));
+            Role role = roleRepo.findById(2).orElseThrow(() -> new RuntimeException("No roles specified."));
 
             Account account = Account.builder()
                     .fullName(customerDTO.getFullName())
