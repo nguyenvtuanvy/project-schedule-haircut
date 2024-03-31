@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,4 +24,13 @@ public class Customer extends Account{
     @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "customer")
+    private Cart cart;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    private Set<Orders> orders = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
+    private Set<Comment> comments = new HashSet<>();
 }

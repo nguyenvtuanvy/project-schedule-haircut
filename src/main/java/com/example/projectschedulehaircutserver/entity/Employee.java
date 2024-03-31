@@ -1,8 +1,10 @@
 package com.example.projectschedulehaircutserver.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,4 +23,9 @@ public class Employee extends Account {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @ManyToMany(mappedBy = "employees", fetch = FetchType.LAZY)
+    private Set<Orders> orders = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    private Set<Comment> comments = new HashSet<>();
 }
