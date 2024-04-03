@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Builder
 @Entity
 @Table(name = "cart_item")
-public class Cartitem {
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,11 +23,15 @@ public class Cartitem {
     @JoinColumn(name = "cart_id", nullable = false)
     private Cart cart;
 
-    @Column(name = "combo_id")
-    private Integer comboId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "combo_id")
+    private Combo combo;
 
-    @Column(name = "service_id")
-    private Integer serviceId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "service_id")
+    private Service service;
 
     @Column(name = "price")
     private BigDecimal price;

@@ -37,8 +37,11 @@ public class Orders {
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
 
-    @Column(name = "order_time", nullable = false)
-    private LocalTime orderTime;
+    @Column(name = "order_sarttime", nullable = false)
+    private LocalTime orderStartTime;
+
+    @Column(name = "order_endtime", nullable = false)
+    private LocalTime orderEndTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

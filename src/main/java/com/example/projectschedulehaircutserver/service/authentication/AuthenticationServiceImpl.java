@@ -1,9 +1,11 @@
 package com.example.projectschedulehaircutserver.service.authentication;
 
 import com.example.projectschedulehaircutserver.entity.Account;
+import com.example.projectschedulehaircutserver.entity.Cart;
 import com.example.projectschedulehaircutserver.entity.Customer;
 import com.example.projectschedulehaircutserver.entity.Role;
 import com.example.projectschedulehaircutserver.repository.AccountRepo;
+import com.example.projectschedulehaircutserver.repository.CartRepo;
 import com.example.projectschedulehaircutserver.repository.CustomerRepo;
 import com.example.projectschedulehaircutserver.repository.RoleRepo;
 import com.example.projectschedulehaircutserver.request.RegisterRequest;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService{
     private final CustomerRepo customerRepo;
+    private final CartRepo cartRepo;
     private final PasswordEncoder encoder;
     private final RoleRepo roleRepo;
     private final AccountRepo accountRepo;
@@ -30,7 +33,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
             Role role = roleRepo.findById(2).orElseThrow(() -> new RuntimeException("No roles specified."));
-
             Account account = Account.builder()
                     .fullName(request.getFullName())
                     .userName(request.getUserName())
@@ -54,7 +56,13 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             customer.setIsBlocked(false);
             customer.setAccount(savedAccount);
 
-            customerRepo.save(customer);
+            Customer saveCustomer = customerRepo.save(customer);
+
+            Cart cart = Cart.builder()
+                    .customer(saveCustomer)
+                    .build();
+
+            cartRepo.save(cart);
 
             var jwtToken = jwtService.generateToken(customer);
 

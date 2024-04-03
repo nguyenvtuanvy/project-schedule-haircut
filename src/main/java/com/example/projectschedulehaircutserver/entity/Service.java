@@ -37,6 +37,9 @@ public class Service {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "service")
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "service")
+    private Set<CartItem> cartItems = new HashSet<>();
+
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;

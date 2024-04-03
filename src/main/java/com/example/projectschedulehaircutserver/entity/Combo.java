@@ -40,6 +40,9 @@ public class Combo {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "combo")
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "combo")
+    private Set<CartItem> cartItems = new HashSet<>();
+
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;

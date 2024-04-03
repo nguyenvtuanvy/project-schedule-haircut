@@ -23,5 +23,5 @@ public class Cart {
     private Customer customer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart")
-    private Set<Cartitem> cartItems = new HashSet<>();
+    private Set<CartItem> cartItems = new HashSet<>();
 }
