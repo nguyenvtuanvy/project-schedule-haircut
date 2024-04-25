@@ -4,17 +4,22 @@ import com.example.projectschedulehaircutserver.entity.Account;
 import com.example.projectschedulehaircutserver.entity.Cart;
 import com.example.projectschedulehaircutserver.entity.Customer;
 import com.example.projectschedulehaircutserver.entity.Role;
+import com.example.projectschedulehaircutserver.exeption.LoginException;
+import com.example.projectschedulehaircutserver.exeption.RegisterException;
 import com.example.projectschedulehaircutserver.repository.AccountRepo;
 import com.example.projectschedulehaircutserver.repository.CartRepo;
 import com.example.projectschedulehaircutserver.repository.CustomerRepo;
 import com.example.projectschedulehaircutserver.repository.RoleRepo;
+import com.example.projectschedulehaircutserver.request.LoginRequest;
 import com.example.projectschedulehaircutserver.request.RegisterRequest;
 import com.example.projectschedulehaircutserver.response.AuthenticationResponse;
 import com.example.projectschedulehaircutserver.service.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +36,22 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 
     @Override
-    public AuthenticationResponse register(RegisterRequest request) {
+    public String registerUser(RegisterRequest request) throws RegisterException {
             Role role = roleRepo.findById(2).orElseThrow(() -> new RuntimeException("No roles specified."));
+            if (request.getUserName() != null){
+                var customer = customerRepo.findCustomerByAccount_UserName(request.getUserName());
+                if (customer.isPresent()){
+                    throw new RegisterException("UserName Đã Được Sử Dụng");
+                }
+            }
+
+            if(request.getPhone() != null){
+                var customer = customerRepo.findCustomerByPhone(request.getPhone());
+                if (customer.isPresent()){
+                    throw new RegisterException("Số Điện Thoại Đã Được Sử Dụng");
+                }
+            }
+
             Account account = Account.builder()
                     .fullName(request.getFullName())
                     .userName(request.getUserName())
@@ -56,35 +75,41 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             customer.setIsBlocked(false);
             customer.setAccount(savedAccount);
 
-            Customer saveCustomer = customerRepo.save(customer);
-
             Cart cart = Cart.builder()
-                    .customer(saveCustomer)
+                    .customer(customer)
                     .build();
 
-            cartRepo.save(cart);
+            try {
+                customerRepo.save(customer);
+                cartRepo.save(cart);
+                return "Đăng Kí Thành Công";
+            } catch (Exception e){
+                throw new RegisterException(e.getMessage());
+            }
 
-            var jwtToken = jwtService.generateToken(customer);
-
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .build();
     }
 
     @Override
-    public AuthenticationResponse authenticate(RegisterRequest request) {
-        authenticationManager.authenticate(
+    public AuthenticationResponse authenticate(LoginRequest request) throws LoginException {
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUserName(),
                         request.getPassword()
                 )
         );
-        var customer = customerRepo.findCustomerByAccount_UserName(request.getUserName()).orElseThrow();
 
-        var jwtToken = jwtService.generateToken(customer);
+        String token = null;
+
+        var customer = customerRepo.findCustomerByUsername(request.getUserName()).orElseThrow();
+
+        token = jwtService.generateToken(customer);
+
+        if (token == null){
+            throw new LoginException("Tài Khoản Hoặc Mật Khẩu Không Chỉnh Xác");
+        }
 
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .token(token)
                 .build();
     }
 }

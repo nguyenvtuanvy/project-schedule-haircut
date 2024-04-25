@@ -84,10 +84,10 @@ public class CartServiceImpl implements CartService{
                     }
                     return "Thêm Dịch Vụ Vào Giỏ Hàng Thành Công";
                 } catch (Exception e){
-                    throw new CartItemException("Không Thể Thêm Dịch Vào Giỏ Hàng");
+                    throw new CartItemException("Không Thể Thêm Dịch Vụ Vào Giỏ Hàng");
                 }
             } else {
-                throw new ComboException("Không Tìm Thấy Dịch");
+                throw new ComboException("Không Tìm Thấy Dịch Vụ");
             }
         } else {
             throw new LoginException("Bạn Chưa Đăng Nhập");
