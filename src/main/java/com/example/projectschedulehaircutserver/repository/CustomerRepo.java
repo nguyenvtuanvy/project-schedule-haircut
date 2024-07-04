@@ -10,8 +10,8 @@ import java.util.Optional;
 public interface CustomerRepo extends JpaRepository<Customer, Integer> {
     Optional<Customer> findCustomerByAccount_UserName(String account_username);
 
-    @Query("select c from Customer c where c.userName = :username")
-    Optional<Customer> findCustomerByUsername(@Param("username") String username);
+//    @Query("select c from Customer c where c.userName = :username")
+//    Optional<Customer> findCustomerByUsername(@Param("username") String username);
 
     @Query("select c from Customer c where c.id = :id")
     Optional<Customer> findByCustomerId(@Param("id") Integer id);

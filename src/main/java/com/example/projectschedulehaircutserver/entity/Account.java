@@ -60,6 +60,16 @@ public class Account implements UserDetails {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JsonIgnore
     @JoinColumn(name = "role_id", nullable = false)

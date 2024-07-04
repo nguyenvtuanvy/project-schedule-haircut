@@ -1,4 +1,4 @@
-package com.example.projectschedulehaircutserver.controller;
+package com.example.projectschedulehaircutserver.controller.test;
 
 import com.example.projectschedulehaircutserver.exeption.LoginException;
 import com.example.projectschedulehaircutserver.exeption.RegisterException;

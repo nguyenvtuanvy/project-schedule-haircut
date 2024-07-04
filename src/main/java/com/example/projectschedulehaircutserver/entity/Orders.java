@@ -1,5 +1,6 @@
 package com.example.projectschedulehaircutserver.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,7 +39,7 @@ public class Orders {
     @Column(name = "order_date", nullable = false)
     private LocalDate orderDate;
 
-    @Column(name = "order_sarttime", nullable = false)
+    @Column(name = "order_starttime", nullable = false)
     private LocalTime orderStartTime;
 
     @Column(name = "order_endtime", nullable = false)
@@ -50,6 +52,9 @@ public class Orders {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
     private Set<OrderItem> orderItems = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
+    private Set<WorkDone> workDones = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "order_employee",
@@ -64,4 +69,14 @@ public class Orders {
     @UpdateTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

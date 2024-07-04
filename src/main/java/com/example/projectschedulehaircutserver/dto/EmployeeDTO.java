@@ -17,13 +17,23 @@ public class EmployeeDTO {
     private Integer age;
     private String address;
     private String phone;
-    private Integer accountId;
+//    private Integer accountId;
     private String avatar;
-    private Boolean isDeleted;
+//    private Boolean isDeleted;
 
     public EmployeeDTO(String userName, String password, String fullName, Integer age, String address, String phone, String avatar) {
         this.userName = userName;
         this.password = password;
+        this.fullName = fullName;
+        this.age = age;
+        this.address = address;
+        this.phone = phone;
+        this.avatar = avatar;
+    }
+
+    public EmployeeDTO(Integer id, String userName, String fullName, Integer age, String address, String phone, String avatar) {
+        this.id = id;
+        this.userName = userName;
         this.fullName = fullName;
         this.age = age;
         this.address = address;

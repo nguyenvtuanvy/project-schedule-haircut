@@ -1,4 +1,4 @@
-package com.example.projectschedulehaircutserver.controller;
+package com.example.projectschedulehaircutserver.controller.test;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/employee")
 @AllArgsConstructor
-public class ManagerController {
+public class EmployeeController {
     @GetMapping("/test")
     public ResponseEntity<String> getText(){
         try{
-            return ResponseEntity.ok("Hello Word Manager!!!");
+            return ResponseEntity.ok("Hello Word Employee!!!");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

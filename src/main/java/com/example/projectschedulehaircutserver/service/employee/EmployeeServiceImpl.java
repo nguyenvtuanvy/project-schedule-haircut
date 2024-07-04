@@ -1,15 +1,23 @@
 package com.example.projectschedulehaircutserver.service.employee;
 
 import com.example.projectschedulehaircutserver.dto.EmployeeDTO;
-import com.example.projectschedulehaircutserver.entity.Account;
-import com.example.projectschedulehaircutserver.entity.Employee;
-import com.example.projectschedulehaircutserver.entity.Role;
+import com.example.projectschedulehaircutserver.entity.*;
+import com.example.projectschedulehaircutserver.exeption.LoginException;
 import com.example.projectschedulehaircutserver.repository.AccountRepo;
 import com.example.projectschedulehaircutserver.repository.EmployeeRepo;
 import com.example.projectschedulehaircutserver.repository.RoleRepo;
+import com.example.projectschedulehaircutserver.request.TotalPriceByEmployeeAndDayRequest;
+import com.example.projectschedulehaircutserver.response.TotalPriceByEmployeeAndDayResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -54,6 +62,28 @@ public class EmployeeServiceImpl implements EmployeeService{
         }
     }
 
+    @Override
+    public Set<EmployeeDTO> showAllEmployee() {
+        return employeeRepo.findAllEmployee();
+    }
+
+    @Override
+    public TotalPriceByEmployeeAndDayResponse TotalPriceByEmployeeAndDay(TotalPriceByEmployeeAndDayRequest request) throws LoginException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            try {
+                Employee employee = (Employee) authentication.getPrincipal();
+
+                Object[] objects = employeeRepo.totalPriceByEmployeeAndDay(employee.getId(), request.getDays());
+
+                return new TotalPriceByEmployeeAndDayResponse(objects);
+            } catch (Exception e){
+                throw new RuntimeException(e.getMessage());
+            }
+        } else {
+            throw new LoginException("Bạn Chưa Đăng Nhập");
+        }
+    }
 
 
 }

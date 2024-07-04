@@ -28,4 +28,7 @@ public class Employee extends Account {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
     private Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "employee")
+    private Set<WorkDone> workDone = new HashSet<>();
 }

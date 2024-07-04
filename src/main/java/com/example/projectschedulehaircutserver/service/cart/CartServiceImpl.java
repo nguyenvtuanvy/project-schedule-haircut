@@ -23,7 +23,6 @@ import java.util.Optional;
 public class CartServiceImpl implements CartService{
     private final CartRepo cartRepo;
     private final CartItemRepo cartItemRepo;
-    private final CustomerRepo customerRepo;
     private final ComboRepo comboRepo;
     private final ServiceRepo serviceRepo;
 
@@ -33,7 +32,7 @@ public class CartServiceImpl implements CartService{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
             Customer customer = (Customer) authentication.getPrincipal();
-            Combo combo = comboRepo.findComboById(request.getComboId()).orElseThrow();
+            Combo combo = comboRepo.findComboById(request.getComboId());
             Cart cart = cartRepo.findCartByCustomerId(customer.getId()).orElseThrow();
             if (combo.getId() != null && cart.getId() != null){
                 Optional<CartItem> isCartItem = cartItemRepo.findCartItemByComboIdAndCartId(request.getComboId(), cart.getId());

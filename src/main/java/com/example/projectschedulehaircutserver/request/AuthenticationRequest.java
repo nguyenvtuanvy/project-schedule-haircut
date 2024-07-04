@@ -1,4 +1,4 @@
-package com.example.projectschedulehaircutserver.response;
+package com.example.projectschedulehaircutserver.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

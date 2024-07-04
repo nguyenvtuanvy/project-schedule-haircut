@@ -6,10 +6,7 @@ import com.example.projectschedulehaircutserver.entity.Customer;
 import com.example.projectschedulehaircutserver.entity.Role;
 import com.example.projectschedulehaircutserver.exeption.LoginException;
 import com.example.projectschedulehaircutserver.exeption.RegisterException;
-import com.example.projectschedulehaircutserver.repository.AccountRepo;
-import com.example.projectschedulehaircutserver.repository.CartRepo;
-import com.example.projectschedulehaircutserver.repository.CustomerRepo;
-import com.example.projectschedulehaircutserver.repository.RoleRepo;
+import com.example.projectschedulehaircutserver.repository.*;
 import com.example.projectschedulehaircutserver.request.LoginRequest;
 import com.example.projectschedulehaircutserver.request.RegisterRequest;
 import com.example.projectschedulehaircutserver.response.AuthenticationResponse;
@@ -20,6 +17,8 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +30,8 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final PasswordEncoder encoder;
     private final RoleRepo roleRepo;
     private final AccountRepo accountRepo;
+    private final EmployeeRepo employeeRepo;
+    private final ManagerRepo managerRepo;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
@@ -98,14 +99,29 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 )
         );
 
-        String token = null;
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        var customer = customerRepo.findCustomerByUsername(request.getUserName()).orElseThrow();
+        final Object[] accountHolder = new Object[1];
 
-        token = jwtService.generateToken(customer);
+        authentication.getAuthorities().forEach(grantedAuthority -> {
+            if (grantedAuthority.getAuthority().equals("ROLE_USER")) {
+                accountHolder[0] = customerRepo.findCustomerByAccount_UserName(request.getUserName()).orElseThrow();
+            } else if (grantedAuthority.getAuthority().equals("ROLE_EMPLOYEE")) {
+                accountHolder[0] = employeeRepo.findEmployeeByAccount_UserName(request.getUserName()).orElseThrow();
+            } else if (grantedAuthority.getAuthority().equals("ROLE_MANAGER")) {
+                accountHolder[0] = managerRepo.findManagerByUseName(request.getUserName());
+            }
+        });
 
-        if (token == null){
-            throw new LoginException("Tài Khoản Hoặc Mật Khẩu Không Chỉnh Xác");
+        var account = accountHolder[0];
+        if (account == null) {
+            throw new LoginException("Unable to find account with the provided username");
+        }
+
+        String token = jwtService.generateToken((UserDetails) account);
+
+        if (token == null) {
+            throw new LoginException("Unable to generate token, please try again");
         }
 
         return AuthenticationResponse.builder()

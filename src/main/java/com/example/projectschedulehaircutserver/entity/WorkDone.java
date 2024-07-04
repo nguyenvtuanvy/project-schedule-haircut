@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -13,30 +14,27 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "work_done")
+public class WorkDone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name = "content", nullable = false)
-    private String content;
-
-    @Column(name = "fullname", nullable = false)
-    private String fullName;
-
-    @Column(name = "rating", nullable = false)
-    private Float rating;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "order_id", nullable = false)
+    private Orders orders;
+
+    @Column(name = "services", nullable = false)
+    private String services;
+
+    @Column(name = "total_price", nullable = false)
+    private BigDecimal totalPrice;
 
     @CreationTimestamp
     @Column(nullable = false)
@@ -46,5 +44,4 @@ public class Comment {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
-
 }
